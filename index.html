@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MuncherHQ — Small Studio. Sharp Tools.</title>
+<meta name="description" content="MuncherHQ is an indie software studio building privacy-focused utility apps. Tools that bite.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b;
+  --bg-elevated:#131316;
+  --bg-card:#18181c;
+  --surface:#222228;
+  --border:#2a2a32;
+  --text:#e8e8ec;
+  --text-muted:#8a8a96;
+  --text-dim:#5a5a66;
+  --accent:#b9ff66;
+  --accent-dim:#b9ff6622;
+  --accent-glow:#b9ff6640;
+  --hot:#ff6b6b;
+  --hot-dim:#ff6b6b22;
+  --blue:#66b8ff;
+  --blue-dim:#66b8ff22;
+  --font-display:'Dela Gothic One', cursive;
+  --font-body:'DM Sans', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:var(--bg)}
+
+/* Grain overlay */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  pointer-events:none;
+  opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  background-size:200px 200px;
+}
+
+/* ====== NAV ====== */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  padding:1rem 2rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(10,10,11,0.8);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid transparent;
+  transition:border-color 0.3s;
+}
+nav.scrolled{border-bottom-color:var(--border)}
+.nav-logo{
+  font-family:var(--font-display);
+  font-size:1.1rem;
+  letter-spacing:-0.02em;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.nav-logo .mascot-icon{
+  width:28px;height:28px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px var(--accent-glow));
+}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--text-muted);
+  transition:color 0.2s;
+  letter-spacing:0.02em;
+}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{
+  font-size:0.8rem;
+  font-weight:600;
+  color:var(--bg)!important;
+  background:var(--accent);
+  padding:0.45rem 1.1rem;
+  border-radius:6px;
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 20px var(--accent-glow);
+  color:var(--bg)!important;
+}
+
+/* ====== HERO ====== */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:8rem 2rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero-grid{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:60px 60px;
+  opacity:0.15;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+}
+.hero-glow{
+  position:absolute;
+  width:600px;height:600px;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  opacity:0.3;
+  pointer-events:none;
+  animation:glow-pulse 6s ease-in-out infinite;
+}
+@keyframes glow-pulse{
+  0%,100%{opacity:0.2;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:0.35;transform:translate(-50%,-50%) scale(1.1)}
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.4rem 1rem;
+  border:1px solid var(--border);
+  border-radius:100px;
+  font-size:0.78rem;
+  font-weight:500;
+  color:var(--text-muted);
+  margin-bottom:2rem;
+  position:relative;
+  z-index:1;
+  opacity:0;
+  animation:fade-up 0.8s 0.2s ease forwards;
+}
+.hero-badge .dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem, 10vw, 8rem);
+  line-height:0.95;
+  letter-spacing:-0.03em;
+  position:relative;
+  z-index:1;
+  opacity:0;
+  animation:fade-up 0.8s 0.4s ease forwards;
+}
+.hero-title .line{display:block}
+.hero-title .accent{color:var(--accent)}
+.hero-title .chomped{
+  position:relative;
+  display:inline-block;
+}
+
+/* Bite mark SVG clip on the "HQ" text */
+.hero-title .chomped::after{
+  content:'';
+  position:absolute;
+  top:-8px;right:-14px;
+  width:42px;height:42px;
+  background:var(--bg);
+  border-radius:50%;
+  animation:chomp 0.6s 1.2s ease-out forwards;
+  opacity:0;
+}
+@keyframes chomp{
+  0%{opacity:0;transform:scale(0.3) rotate(-20deg)}
+  60%{opacity:1;transform:scale(1.15) rotate(5deg)}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
+
+.hero-subtitle{
+  margin-top:1.5rem;
+  font-size:clamp(1rem, 2.5vw, 1.3rem);
+  color:var(--text-muted);
+  max-width:520px;
+  line-height:1.6;
+  position:relative;
+  z-index:1;
+  opacity:0;
+  animation:fade-up 0.8s 0.6s ease forwards;
+}
+.hero-actions{
+  margin-top:2.5rem;
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+  opacity:0;
+  animation:fade-up 0.8s 0.8s ease forwards;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.75rem 1.6rem;
+  border-radius:8px;
+  font-family:var(--font-body);
+  font-size:0.9rem;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  transition:all 0.25s;
+}
+.btn-primary{
+  background:var(--accent);
+  color:var(--bg);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px var(--accent-glow);
+}
+.btn-ghost{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{
+  border-color:var(--text-dim);
+  background:var(--bg-elevated);
+}
+.hero-scroll{
+  position:absolute;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.5rem;
+  color:var(--text-dim);
+  font-size:0.7rem;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  opacity:0;
+  animation:fade-up 0.8s 1.2s ease forwards;
+}
+.hero-scroll .arrow{
+  width:16px;height:16px;
+  border-right:1.5px solid var(--text-dim);
+  border-bottom:1.5px solid var(--text-dim);
+  transform:rotate(45deg);
+  animation:bob 2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:rotate(45deg) translate(0)}50%{transform:rotate(45deg) translate(3px,3px)}}
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Mascot behind hero title */
+.hero-mascot{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-45%);
+  width:clamp(150px, 20vw, 260px);
+  z-index:0;
+  opacity:0;
+  animation:mascot-enter 1.2s 0.8s ease forwards;
+  filter:drop-shadow(0 0 60px rgba(185,255,102,0.15));
+  pointer-events:none;
+}
+.hero-mascot img{
+  width:100%;
+  height:auto;
+  animation:mascot-float 5s 2s ease-in-out infinite;
+}
+@keyframes mascot-enter{
+  0%{opacity:0;transform:translate(-50%,-45%) scale(0.7) rotate(-5deg)}
+  60%{opacity:0.22;transform:translate(-50%,-45%) scale(1.03) rotate(1deg)}
+  100%{opacity:0.18;transform:translate(-50%,-45%) scale(1) rotate(0deg)}
+}
+@keyframes mascot-float{
+  0%,100%{transform:translate(-50%,-45%) scale(1) rotate(0deg)}
+  50%{transform:translate(-50%,-47%) scale(1.02) rotate(1.5deg)}
+}
+
+/* ====== BITE MARKS ====== */
+/*
+  Each .bite-mark is an SVG-based realistic bite shape:
+  a curved arc of tooth indentations, like something took a chomp.
+  Using inline SVG backgrounds for crisp rendering at any size.
+*/
+.bite-mark{
+  position:absolute;
+  pointer-events:none;
+  z-index:0;
+  /* Default bite SVG — upper jaw arc with 4 teeth */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 50'%3E%3Cpath d='M8,42 Q12,8 40,4 Q68,8 72,42' fill='none' stroke='%23b9ff66' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3Cellipse cx='20' cy='28' rx='5' ry='7' fill='none' stroke='%23b9ff66' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='33' cy='18' rx='5.5' ry='8' fill='none' stroke='%23b9ff66' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='47' cy='18' rx='5.5' ry='8' fill='none' stroke='%23b9ff66' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='60' cy='28' rx='5' ry='7' fill='none' stroke='%23b9ff66' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-size:contain;
+}
+
+/* Red variant */
+.bite-mark.bite-red{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 50'%3E%3Cpath d='M8,42 Q12,8 40,4 Q68,8 72,42' fill='none' stroke='%23ff6b6b' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3Cellipse cx='20' cy='28' rx='5' ry='7' fill='none' stroke='%23ff6b6b' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='33' cy='18' rx='5.5' ry='8' fill='none' stroke='%23ff6b6b' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='47' cy='18' rx='5.5' ry='8' fill='none' stroke='%23ff6b6b' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='60' cy='28' rx='5' ry='7' fill='none' stroke='%23ff6b6b' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E");
+}
+/* Blue variant */
+.bite-mark.bite-blue{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 50'%3E%3Cpath d='M8,42 Q12,8 40,4 Q68,8 72,42' fill='none' stroke='%2366b8ff' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3Cellipse cx='20' cy='28' rx='5' ry='7' fill='none' stroke='%2366b8ff' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='33' cy='18' rx='5.5' ry='8' fill='none' stroke='%2366b8ff' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='47' cy='18' rx='5.5' ry='8' fill='none' stroke='%2366b8ff' stroke-width='1.5' opacity='0.5'/%3E%3Cellipse cx='60' cy='28' rx='5' ry='7' fill='none' stroke='%2366b8ff' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Individual positioned bite marks in hero */
+.bite-hero-1{top:14%;left:6%;width:70px;height:44px;opacity:0.10;transform:rotate(-25deg)}
+.bite-hero-2{top:20%;right:8%;width:55px;height:34px;opacity:0.07;transform:rotate(15deg) scaleY(-1)}
+.bite-hero-3{bottom:20%;left:10%;width:60px;height:38px;opacity:0.06;transform:rotate(40deg)}
+.bite-hero-4{bottom:28%;right:6%;width:80px;height:50px;opacity:0.08;transform:rotate(-10deg) scaleY(-1)}
+.bite-hero-5{top:45%;left:3%;width:45px;height:28px;opacity:0.08;transform:rotate(60deg)}
+.bite-hero-6{top:58%;right:4%;width:50px;height:32px;opacity:0.06;transform:rotate(-35deg)}
+
+/* Floating drift for bite marks */
+.bite-hero-1{animation:bite-drift-1 8s ease-in-out infinite}
+.bite-hero-2{animation:bite-drift-2 10s ease-in-out infinite}
+.bite-hero-3{animation:bite-drift-1 9s 1s ease-in-out infinite}
+.bite-hero-4{animation:bite-drift-2 7s 0.5s ease-in-out infinite}
+.bite-hero-5{animation:bite-drift-1 11s 2s ease-in-out infinite}
+.bite-hero-6{animation:bite-drift-2 9s 1.5s ease-in-out infinite}
+@keyframes bite-drift-1{
+  0%,100%{transform:var(--base-rotate, rotate(0deg)) translate(0,0)}
+  50%{transform:var(--base-rotate, rotate(0deg)) translate(6px,-10px)}
+}
+@keyframes bite-drift-2{
+  0%,100%{transform:var(--base-rotate, rotate(0deg)) translate(0,0)}
+  50%{transform:var(--base-rotate, rotate(0deg)) translate(-5px,8px)}
+}
+
+/* Bite marks in products section */
+.products{position:relative}
+.bite-products-1{top:50px;right:20px;width:60px;height:38px;opacity:0.06;transform:rotate(20deg)}
+.bite-products-2{bottom:100px;left:10px;width:48px;height:30px;opacity:0.05;transform:rotate(-50deg) scaleY(-1)}
+
+/* Bite mark on all titles — teeth biting down into top-right edge of text */
+.section-title{position:relative;display:inline-block}
+.product-name{position:relative;display:inline-block}
+.philo-title{position:relative;display:inline-block}
+
+.section-title::after,
+.product-name::after,
+.philo-title::after{
+  content:'';
+  position:absolute;
+  /* Teeth pointing downward into the text — flipped vertically */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 44'%3E%3Cellipse cx='10' cy='10' rx='6' ry='9' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='28' cy='6' rx='7' ry='11' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='48' cy='6' rx='7' ry='11' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='66' cy='10' rx='6' ry='9' fill='%23b9ff66' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-size:contain;
+}
+
+/* Section titles — "Tools that bite.", "How we build." */
+.section-title::after{
+  top:-2px;
+  right:-8px;
+  width:32px;height:18px;
+  opacity:0.25;
+  transform:rotate(8deg);
+}
+
+/* Product names — "BetaMuncher", "FileMuncher" */
+.product-name::after{
+  top:-1px;
+  right:-6px;
+  width:24px;height:14px;
+  opacity:0.2;
+  transform:rotate(12deg);
+}
+
+/* Philosophy card titles */
+.philo-title::after{
+  top:-1px;
+  right:-4px;
+  width:18px;height:10px;
+  opacity:0.18;
+  transform:rotate(-5deg);
+}
+
+/* Bite accents on philosophy cards — hover corner bite */
+.philo-card{position:relative;overflow:visible}
+.philo-card::before{
+  content:'';
+  position:absolute;
+  top:-4px;right:-4px;
+  width:32px;height:18px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 44'%3E%3Cellipse cx='10' cy='10' rx='6' ry='9' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='28' cy='6' rx='7' ry='11' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='48' cy='6' rx='7' ry='11' fill='%23b9ff66' opacity='0.5'/%3E%3Cellipse cx='66' cy='10' rx='6' ry='9' fill='%23b9ff66' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-size:contain;
+  opacity:0;
+  transition:opacity 0.3s;
+  transform:rotate(20deg);
+}
+.philo-card:hover::before{opacity:0.12}
+
+
+/* ====== PRODUCTS ====== */
+.products{
+  padding:6rem 2rem 4rem;
+  max-width:1100px;
+  margin:0 auto;
+}
+.section-label{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  font-weight:600;
+  color:var(--accent);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+.section-label::before{
+  content:'';
+  width:24px;
+  height:1px;
+  background:var(--accent);
+}
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(2rem, 5vw, 3.2rem);
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:3.5rem;
+}
+
+.product-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:2.5rem;
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+  transition:border-color 0.3s, transform 0.3s;
+  opacity:0;
+  transform:translateY(30px);
+}
+.product-card.visible{
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity 0.6s ease, transform 0.6s ease, border-color 0.3s;
+}
+.product-card:hover{
+  border-color:var(--text-dim);
+  transform:translateY(-2px);
+}
+.product-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+}
+.product-card.beta::before{background:linear-gradient(90deg, var(--hot), var(--hot-dim))}
+.product-card.file::before{background:linear-gradient(90deg, var(--accent), var(--accent-dim))}
+.product-card.future::before{background:linear-gradient(90deg, var(--blue), var(--blue-dim))}
+
+.product-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:1.5rem;
+  flex-wrap:wrap;
+}
+.product-name{
+  font-family:var(--font-display);
+  font-size:1.6rem;
+  letter-spacing:-0.01em;
+}
+.product-badge{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:0.3rem 0.75rem;
+  border-radius:100px;
+  white-space:nowrap;
+}
+.badge-soon{
+  color:var(--hot);
+  background:var(--hot-dim);
+  border:1px solid #ff6b6b44;
+}
+.badge-live{
+  color:var(--accent);
+  background:var(--accent-dim);
+  border:1px solid #b9ff6644;
+}
+.badge-future{
+  color:var(--blue);
+  background:var(--blue-dim);
+  border:1px solid #66b8ff44;
+}
+
+.product-desc{
+  color:var(--text-muted);
+  font-size:0.95rem;
+  line-height:1.7;
+  max-width:600px;
+  margin-bottom:1.5rem;
+}
+.product-features{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.6rem;
+  margin-bottom:2rem;
+  list-style:none;
+}
+.product-features li{
+  font-size:0.78rem;
+  font-weight:500;
+  color:var(--text);
+  background:var(--surface);
+  padding:0.35rem 0.85rem;
+  border-radius:6px;
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+}
+.product-features li .icon{
+  font-size:0.85rem;
+  line-height:1;
+}
+.product-links{
+  display:flex;
+  gap:0.75rem;
+  flex-wrap:wrap;
+}
+.product-link{
+  display:inline-flex;
+  align-items:center;
+  gap:0.4rem;
+  font-size:0.82rem;
+  font-weight:600;
+  padding:0.5rem 1rem;
+  border-radius:6px;
+  border:1px solid var(--border);
+  transition:all 0.2s;
+}
+.product-link:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+  background:var(--accent-dim);
+}
+.product-link svg{width:14px;height:14px}
+
+/* Future card */
+.future-card{
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  flex-wrap:wrap;
+}
+.future-ghosts{
+  display:flex;
+  gap:0.6rem;
+}
+.future-ghost{
+  width:44px;height:44px;
+  border-radius:10px;
+  border:2px dashed var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+  color:var(--text-dim);
+  animation:ghost-pulse 3s ease-in-out infinite;
+}
+.future-ghost:nth-child(2){animation-delay:0.5s}
+.future-ghost:nth-child(3){animation-delay:1s}
+@keyframes ghost-pulse{
+  0%,100%{opacity:0.5;border-color:var(--border)}
+  50%{opacity:0.8;border-color:var(--text-dim)}
+}
+.future-text{
+  color:var(--text-muted);
+  font-size:0.95rem;
+}
+.future-text strong{
+  color:var(--blue);
+  font-family:var(--font-mono);
+  font-size:0.88rem;
+}
+
+/* ====== PHILOSOPHY ====== */
+.philosophy{
+  padding:4rem 2rem 6rem;
+  max-width:1100px;
+  margin:0 auto;
+}
+.philosophy-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2rem;
+  margin-top:2rem;
+}
+.philo-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1.8rem;
+  transition:border-color 0.3s;
+  opacity:0;
+  transform:translateY(20px);
+}
+.philo-card.visible{
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+}
+.philo-card:hover{border-color:var(--text-dim)}
+.philo-icon{
+  font-size:1.5rem;
+  margin-bottom:0.75rem;
+  display:block;
+  line-height:1;
+}
+.philo-title{
+  font-family:var(--font-display);
+  font-size:1rem;
+  margin-bottom:0.5rem;
+}
+.philo-text{
+  color:var(--text-muted);
+  font-size:0.85rem;
+  line-height:1.65;
+}
+
+/* ====== FOOTER ====== */
+footer{
+  border-top:1px solid var(--border);
+  padding:3rem 2rem;
+  max-width:1100px;
+  margin:0 auto;
+}
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:2rem;
+}
+.footer-brand{
+  max-width:320px;
+}
+.footer-brand-name{
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  margin-bottom:0.5rem;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+.footer-brand-name .mascot-icon{
+  width:24px;height:24px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 4px var(--accent-glow));
+}
+.footer-brand p{
+  color:var(--text-dim);
+  font-size:0.8rem;
+  line-height:1.6;
+}
+.footer-links{
+  display:flex;
+  gap:3rem;
+  flex-wrap:wrap;
+}
+.footer-col h4{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  font-weight:600;
+  color:var(--text-muted);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+}
+.footer-col a{
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+  font-size:0.85rem;
+  color:var(--text-dim);
+  padding:0.2rem 0;
+  transition:color 0.2s;
+}
+.footer-col a:hover{color:var(--accent)}
+.footer-col a svg{width:14px;height:14px;flex-shrink:0}
+
+.footer-bottom{
+  margin-top:3rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+.footer-copyright{
+  font-size:0.75rem;
+  color:var(--text-dim);
+}
+.footer-made{
+  font-size:0.75rem;
+  color:var(--text-dim);
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+}
+.footer-made .heart{color:var(--hot)}
+
+/* ====== RESPONSIVE ====== */
+@media(max-width:768px){
+  nav{padding:0.75rem 1.25rem}
+  .nav-links{gap:1rem}
+  .nav-links a:not(.nav-cta){display:none}
+  .hero{padding:7rem 1.5rem 4rem;min-height:90vh}
+  .hero-title{font-size:clamp(2.4rem, 12vw, 4rem)}
+  .hero-title .chomped::after{width:28px;height:28px;top:-5px;right:-8px}
+  .products,.philosophy{padding:4rem 1.5rem}
+  .product-card{padding:1.8rem}
+  .philosophy-grid{grid-template-columns:1fr}
+  .future-card{flex-direction:column;align-items:flex-start;gap:1rem}
+  .footer-inner{flex-direction:column}
+  .footer-links{gap:2rem}
+  .hero-scroll{display:none}
+  .hero-mascot{width:clamp(120px,35vw,180px);opacity:0;animation:mascot-enter-mobile 1.2s 0.8s ease forwards}
+  @keyframes mascot-enter-mobile{
+    0%{opacity:0;transform:translate(-50%,-45%) scale(0.7)}
+    100%{opacity:0.12;transform:translate(-50%,-45%) scale(1)}
+  }
+  .bite-mark{display:none}
+  .section-title::after,
+  .product-name::after,
+  .philo-title::after{display:none}
+}
+@media(max-width:480px){
+  .hero{padding:6rem 1rem 3rem}
+  .product-header{flex-direction:column;gap:0.5rem}
+  .product-features li{font-size:0.72rem}
+  .section-title{margin-bottom:2.5rem}
+}
+
+/* ====== CURSOR ====== */
+@media(hover:hover){
+  .product-card{cursor:default}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <img src="munchy-phone-transparent-small.png" alt="Munchy mascot" class="mascot-icon">
+    MuncherHQ
+  </div>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#philosophy">About</a>
+    <a href="https://github.com/muncherhq" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:hello@muncherhq.com" class="nav-cta">Get in Touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!-- Bite marks scattered across hero -->
+  <div class="bite-mark bite-hero-1"></div>
+  <div class="bite-mark bite-hero-2"></div>
+  <div class="bite-mark bite-hero-3"></div>
+  <div class="bite-mark bite-hero-4"></div>
+  <div class="bite-mark bite-red bite-hero-5"></div>
+  <div class="bite-mark bite-blue bite-hero-6"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Indie studio shipping real tools
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line">Muncher<span class="chomped accent">HQ<span></span></span></span>
+  </h1>
+
+  <p class="hero-subtitle">
+    Small studio. Sharp tools. We build privacy-first utility apps that do one thing well — and never phone home with your data.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#products" class="btn btn-primary">See what we're building</a>
+    <a href="https://github.com/muncherhq" target="_blank" rel="noopener" class="btn btn-ghost">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      View on GitHub
+    </a>
+  </div>
+
+  <div class="hero-mascot">
+    <img src="munchy-phone-transparent-small.png" alt="Munchy — the MuncherHQ mascot">
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <!-- Bite marks in products -->
+  <div class="bite-mark bite-products-1"></div>
+  <div class="bite-mark bite-red bite-products-2"></div>
+  <div class="section-label">Products</div>
+  <h2 class="section-title">Tools that bite.</h2>
+
+  <!-- BetaMuncher -->
+  <article class="product-card beta">
+    <div class="product-header">
+      <h3 class="product-name">BetaMuncher</h3>
+      <span class="product-badge badge-soon">Coming Soon</span>
+    </div>
+    <p class="product-desc">
+      The only tool that scans your installed Android apps to find Google Play beta programs — plus a crowdsourced web directory of open betas. Stop missing early access. Start munching betas.
+    </p>
+    <ul class="product-features">
+      <li><span class="icon">&#128274;</span> Privacy-first — anonymous UUID, zero tracking</li>
+      <li><span class="icon">&#128193;</span> Open source client (Apache 2.0)</li>
+      <li><span class="icon">&#128241;</span> Kotlin + Jetpack Compose + Material 3</li>
+      <li><span class="icon">&#127760;</span> Web directory + Android app</li>
+      <li><span class="icon">&#11088;</span> Freemium — Pro at $1.99/mo</li>
+    </ul>
+    <div class="product-links">
+      <a href="https://betamuncher.com" target="_blank" rel="noopener" class="product-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        betamuncher.com
+      </a>
+      <a href="https://github.com/muncherhq/betamuncher-android" target="_blank" rel="noopener" class="product-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        Source Code
+      </a>
+    </div>
+  </article>
+
+  <!-- FileMuncher -->
+  <article class="product-card file">
+    <div class="product-header">
+      <h3 class="product-name">FileMuncher</h3>
+      <span class="product-badge badge-live">Live</span>
+    </div>
+    <p class="product-desc">
+      40+ free file tools — edit PDFs, compress images, convert video &amp; audio, generate QR codes, and more. Everything runs in your browser. Your files never leave your device. Ever.
+    </p>
+    <ul class="product-features">
+      <li><span class="icon">&#128736;</span> 40+ tools across 9 categories</li>
+      <li><span class="icon">&#128274;</span> 100% browser-based — zero uploads</li>
+      <li><span class="icon">&#9889;</span> PDF, image, video, audio, archive, text, QR</li>
+      <li><span class="icon">&#127873;</span> Free core tools, Pro for power users</li>
+    </ul>
+    <div class="product-links">
+      <a href="https://filemuncher.com" target="_blank" rel="noopener" class="product-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        filemuncher.com
+      </a>
+    </div>
+  </article>
+
+  <!-- Future -->
+  <article class="product-card future">
+    <div class="future-card">
+      <div class="future-ghosts">
+        <div class="future-ghost">?</div>
+        <div class="future-ghost">?</div>
+        <div class="future-ghost">?</div>
+      </div>
+      <div class="future-text">
+        More <strong>???Muncher</strong> tools are cooking. Something's always being built in the workshop.
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="section-label">Philosophy</div>
+  <h2 class="section-title">How we build.</h2>
+
+  <div class="philosophy-grid">
+    <div class="philo-card">
+      <span class="philo-icon">&#128274;</span>
+      <h3 class="philo-title">Privacy is non-negotiable</h3>
+      <p class="philo-text">Your files stay on your device. Your data stays yours. We don't track, we don't snoop, we don't sell. If it can run locally, it does.</p>
+    </div>
+    <div class="philo-card">
+      <span class="philo-icon">&#128268;</span>
+      <h3 class="philo-title">Open where it matters</h3>
+      <p class="philo-text">Client code is open source. Server code protects the business. We're transparent about what runs on your device because you should be able to verify it.</p>
+    </div>
+    <div class="philo-card">
+      <span class="philo-icon">&#128296;</span>
+      <h3 class="philo-title">Built by one, used by many</h3>
+      <p class="philo-text">This is a one-person studio. No committees, no roadmap theater. Just a maker who ships tools they actually want to use.</p>
+    </div>
+    <div class="philo-card">
+      <span class="philo-icon">&#127919;</span>
+      <h3 class="philo-title">Do one thing well</h3>
+      <p class="philo-text">Each tool solves a real problem for power users. No feature creep, no dark patterns, no subscription gates on basic functionality.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-name">
+        <img src="munchy-phone-transparent-small.png" alt="Munchy" class="mascot-icon">
+        MuncherHQ
+      </div>
+      <p>An indie software studio building privacy-focused utility apps. Small team, sharp tools, no compromises.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="https://betamuncher.com" target="_blank" rel="noopener">BetaMuncher</a>
+        <a href="https://filemuncher.com" target="_blank" rel="noopener">FileMuncher</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="https://github.com/muncherhq" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <a href="https://x.com/muncherhq" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16h-4.267z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+          @muncherhq
+        </a>
+        <a href="mailto:hello@muncherhq.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          hello@muncherhq.com
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copyright">&copy; 2026 MuncherHQ. All rights reserved.</span>
+    <span class="footer-made">Made with <span class="heart">&#10084;</span> and too much caffeine</span>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// Intersection Observer for scroll animations
+const observerOptions = {
+  root: null,
+  rootMargin: '0px 0px -60px 0px',
+  threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // Stagger the animation based on element index within its parent
+      const siblings = entry.target.parentElement.querySelectorAll('.product-card, .philo-card');
+      let index = 0;
+      siblings.forEach((el, idx) => {
+        if (el === entry.target) index = idx;
+      });
+      entry.target.style.transitionDelay = `${index * 0.1}s`;
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.product-card, .philo-card').forEach(card => {
+  observer.observe(card);
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(anchor.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
