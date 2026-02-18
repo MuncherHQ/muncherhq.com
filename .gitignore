@@ -2,5 +2,4 @@
 Thumbs.db
 .vercel
 node_modules
-
-.vercel
+.claude/settings.local.json
